@@ -1,0 +1,87 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath "io.ratpack:ratpack-gradle:0.9.14"
+		classpath "com.github.jengelman.gradle.plugins:shadow:1.2.1"
+	}
+}
+
+if (!JavaVersion.current().java8Compatible) {
+	throw new IllegalStateException("Must be built with Java 8 or higher")
+}
+
+// ratpack-guice module need to appy "java" plugin
+apply plugin: "java"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "maven"
+
+repositories {
+
+	jcenter()
+
+	maven { url 'http://clinker.netty.io/nexus/content/repositories/snapshots' }
+
+	flatDir {
+		dirs 'libs'
+	}
+
+}
+
+// for local maven repo publishing, it will put .jar and .pom into:
+// 		~/.m2/repository/name/bpdp/ratpack-2p/{version}/ratpack-2p-{version}.*
+//		{version} will be replaced by version below.
+//
+group='name.bpdp'
+version='0.0.1'
+
+dependencies {
+
+	// This is a Guice ratpack module
+	compile 'io.ratpack:ratpack-guice:0.9.14'
+
+	compile 'it.unibo.alice.tuprolog:tuprolog:3.0.0'
+
+	// Default SLF4J binding.  Note that this is a blocking implementation.
+	// See here for a non blocking appender http://logging.apache.org/log4j/2.x/manual/async.html
+	runtime 'org.slf4j:slf4j-simple:1.7.10'
+
+	testCompile 'junit:junit:4.11'
+
+}
+
+configure(install.repositories.mavenInstaller) {
+  pom.project {
+    name rootProject.name
+    description 'Ratpack guice module for tuProlog integration'
+    inceptionYear '2015'
+    packaging 'jar'
+
+    url 'http://github.com/bpdp/ratpack-2p'
+
+    developers {
+      developer {
+        id 'bpdp'
+        name 'Bambang Purnomosidi D. P.'
+        email 'bpurnomo@akakom.ac.id'
+      }
+    }
+
+    scm {
+      url 'http://github.com/bpdp/ratpack-2p'
+    }
+
+    licenses {
+      license {
+        name 'The Apache Software License, Version 2.0'
+        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        distribution 'repo'
+      }
+    }
+
+    properties {
+      setProperty('project.build.sourceEncoding', 'UTF8')
+    }
+  }
+}

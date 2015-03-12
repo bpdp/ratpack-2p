@@ -1,0 +1,49 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath "io.ratpack:ratpack-gradle:0.9.14"
+	}
+}
+
+if (!JavaVersion.current().java8Compatible) {
+	throw new IllegalStateException("Must be built with Java 8 or higher")
+}
+
+// ratpack-guice module need to appy "java" plugin
+apply plugin: "java"
+
+// for testing purposes
+apply plugin: "io.ratpack.ratpack-groovy"
+
+repositories {
+
+	jcenter()
+
+	mavenLocal()
+
+	maven { url 'http://clinker.netty.io/nexus/content/repositories/snapshots' }
+
+	flatDir {
+		dirs 'libs'
+	}
+
+}
+
+dependencies {
+
+	// This is a Guice ratpack module
+	compile 'io.ratpack:ratpack-guice:0.9.14'
+
+	compile 'it.unibo.alice.tuprolog:tuprolog:3.0.0'
+
+	compile 'name.bpdp:ratpack-2p:0.0.1'
+
+	// Default SLF4J binding.  Note that this is a blocking implementation.
+	// See here for a non blocking appender http://logging.apache.org/log4j/2.x/manual/async.html
+	runtime 'org.slf4j:slf4j-simple:1.7.10'
+
+	testCompile 'junit:junit:4.11'
+
+}

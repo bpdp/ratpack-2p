@@ -21,3 +21,5 @@ test-tmp/
 *.iws
 .nb-gradle/
 /.nb-gradle/private/
+example/.gradle/
+
